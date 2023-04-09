@@ -1,5 +1,5 @@
 // complete this js code
-	function Person(name, age) {
+function Person(name, age) {
 	  this.name = name;
 	  this.age = age;
 	}
@@ -24,6 +24,7 @@
 	
 	window.Person = Person;
 	window.Employee = Employee;ˇ
+	
 
 
 
