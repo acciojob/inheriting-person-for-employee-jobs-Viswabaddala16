@@ -1,32 +1,25 @@
-// cypress/integration/example.spec.js
+// Person constructor function
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
+}
 
-// This is your base URL, replace it with your actual application URL
-const baseUrl = 'http://localhost:3000'; // Replace with your application's URL
+// Add the greet method to the Person prototype
+Person.prototype.greet = function () {
+  console.log(`Hello, my name is ${this.name}, I am ${this.age} years old.`);
+};
 
-describe('Example Test Suite', () => {
-  beforeEach(() => {
-    cy.visit(`${baseUrl}/main.html`);
-  });
+// Employee constructor function that inherits from Person
+function Employee(name, age, jobTitle) {
+  // Call the Person constructor using Employee's context
+  Person.call(this, name, age);
+  this.jobTitle = jobTitle;
+}
 
-  it('should greet a person and an employee', () => {
-    cy.window().then((win) => {
-      const Person = win.Person;
-      const Employee = win.Employee;
-      const person = new Person('Alice', 25);
-      const employee = new Employee('Bob', 30, 'Manager');
+// Inherit the Person prototype in the Employee prototype
+Employee.prototype = Object.create(Person.prototype);
 
-      // Stub the console.log method
-      cy.stub(win.console, 'log').as('consoleLog');
-
-      // Call the greet methods
-      person.greet();
-      cy.get('@consoleLog').should('be.calledWith', `Hello, my name is Alice and I am 25 years old.`);
-
-      employee.jobGreet();
-      cy.get('@consoleLog').should(
-        'be.calledWith',
-        `Hello, my name is Bob, I am 30 years old, and my job title is Manager.`
-      );
-    });
-  });
-});
+// Add the jobGreet method to the Employee prototype
+Employee.prototype.jobGreet = function () {
+  console.log(`Hello, my name is ${this.name}, I am ${this.age} years old, and my job title is ${this.jobTitle}.`);
+};
