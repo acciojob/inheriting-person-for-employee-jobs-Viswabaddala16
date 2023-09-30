@@ -1,25 +1,17 @@
-// Person constructor function
-function Person(name, age) {
-  this.name = name;
-  this.age = age;
-}
+const Person = win.Person;
+const Employee = win.Employee;
+const person = new Person("Alice", 25);
+const employee = new Employee("Bob", 30, "Manager");
 
-// Add the greet method to the Person prototype
-Person.prototype.greet = function () {
-  console.log(`Hello, my name is ${this.name}, I am ${this.age} years old.`);
-};
+// Spy on the console.log method
+cy.window().then((win) => {
+  cy.spy(win.console, 'log').as('consoleLog');
+});
 
-// Employee constructor function that inherits from Person
-function Employee(name, age, jobTitle) {
-  // Call the Person constructor using Employee's context
-  Person.call(this, name, age);
-  this.jobTitle = jobTitle;
-}
+it('should log the correct greeting for Person and Employee', () => {
+  person.greet();
+  cy.get('@consoleLog').should('be.calledWith', 'Hello, my name is Alice, I am 25 years old.');
 
-// Inherit the Person prototype in the Employee prototype
-Employee.prototype = Object.create(Person.prototype);
-
-// Add the jobGreet method to the Employee prototype
-Employee.prototype.jobGreet = function () {
-  console.log(`Hello, my name is ${this.name}, I am ${this.age} years old, and my job title is ${this.jobTitle}.`);
-};
+  employee.jobGreet();
+  cy.get('@consoleLog').should('be.calledWith', 'Hello, my name is Bob, I am 30 years old, and my job title is Manager.');
+});
